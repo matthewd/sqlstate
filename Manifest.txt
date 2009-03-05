@@ -1,0 +1,14 @@
+History.txt
+Manifest.txt
+README.rdoc
+Rakefile
+lib/sqlstate.rb
+lib/sqlstate/core.rb
+lib/sqlstate/modules.rb
+lib/sqlstate/postgres.rb
+lib/sqlstate/standard.rb
+script/console
+script/destroy
+script/generate
+test/test_helper.rb
+test/test_sqlstate.rb
