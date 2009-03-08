@@ -4,12 +4,58 @@ require 'sqlstate/standard'
 class SqlState::PostgresError < SqlState
   extend SqlStateRoot
 
+  # The PostgreSQL-specific informational fields that are available from
+  # an SqlState exception that has been raised from PostgreSQL. This
+  # module is extended into all exceptions returned by
+  # SqlState::PostgresError#create.
+  #
+  # These fields are in addition to +message+, which should contain the
+  # single-line "primary message" from the PostgreSQL server.
+  #
+  # Any values not made available by the server should be left set to
+  # nil.
   module Details
-    attr_accessor :details, :hint, :context
-    attr_accessor :source_file, :source_line, :source_function
-    attr_accessor :query, :query_position, :internal_query, :internal_position
+    # A potentially multi-line description, containing more specific
+    # information as to what caused the error. Contains only facts, not
+    # speculation.
+    attr_accessor :details
+
+    # A potentially multi-line suggestion of action that may be taken to
+    # resolve the issue; may be speculative.
+    attr_accessor :hint
+
+    attr_accessor :context
+
+
+    attr_accessor :source_file
+
+    attr_accessor :source_line
+
+    attr_accessor :source_function
+
+
+    # The user query that was executing at the time the error occurred.
+    attr_accessor :query
+
+    # A character (not byte) offset into the +query+, indicating
+    # specifically where to look for the error.
+    attr_accessor :query_position
+
+    # An internally constructed SQL query that was being evaluated on
+    # the server, as a result of the given user +query+, at the time of
+    # the error.
+    attr_accessor :internal_query
+
+    # A character (not byte) offset into the +internal_query+,
+    # indicating specifically where to look for the error.
+    attr_accessor :internal_position
   end
 
+  # Creates an exception representing the given SQLSTATE code, as
+  # generated from PostgreSQL. Should be used in preference to calling
+  # #for then #new, because it adds PostgreSQL-specific fields (as
+  # defined in Details) to the returned exception -- even ones defined
+  # in the standard.
   def self.create(sql_state, message=nil)
     obj = super
     obj.send(:extend, Details)

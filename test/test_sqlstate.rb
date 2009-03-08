@@ -3,9 +3,11 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 class TestSqlstate < Test::Unit::TestCase
 
   def test_defined_class_can_be_retrieved
-    root = SqlState.dup
-    root.define_class 'TT', 'Test Error Class'
-    assert_equal 'TT000', root.for('TT000')::SQL_STATE
+    assert_equal 'TT000', 
+      SqlState.dup.class_eval {
+        define_class 'TT', 'Test Error Class'
+        self.for('TT000')::SQL_STATE
+      }
   end
 
   def test_for_returns_class
