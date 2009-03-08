@@ -25,7 +25,7 @@ exceptions.
   SQLSTATE codes
 * Ability to extend the hierarchy for a database platform, mixing vendor
   codes with Standard ones
-* Vendor-specific exception hierarchies for:
+* Vendor-specific exception hierarchies for
   * PostgreSQL
 
 == SYNOPSIS:
@@ -41,7 +41,7 @@ exceptions.
 
 == INSTALL:
 
-  sudo gem install sqlstate
+  [sudo] gem install sqlstate
 
 == LICENSE:
 
