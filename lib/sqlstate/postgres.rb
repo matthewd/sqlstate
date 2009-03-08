@@ -7,9 +7,10 @@ class SqlState::PostgresError < SqlState
   module Details
     attr_accessor :details, :hint, :context
     attr_accessor :source_file, :source_line, :source_function
+    attr_accessor :query, :query_position, :internal_query, :internal_position
   end
 
-  def create(sql_state, message=nil)
+  def self.create(sql_state, message=nil)
     obj = super
     obj.send(:extend, Details)
     obj
