@@ -25,4 +25,16 @@ class TestPostgres < Test::Unit::TestCase
     assert_equal SqlState.for('P0000'), SqlState
   end
 
+  def test_custom_subclass_has_details_when_created
+    assert_respond_to SqlState::PostgresError.create('40P01'), :details=
+  end
+
+  def test_standard_subclass_has_details_when_created_through_postgres
+    assert_respond_to SqlState::PostgresError.create('22012'), :details=
+  end
+
+  def test_standard_subclass_doesnt_have_details_when_created_directly
+    assert !SqlState.create('22012').respond_to?(:details=)
+  end
+
 end
