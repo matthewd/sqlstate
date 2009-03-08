@@ -16,8 +16,8 @@ class TestSqlstate < Test::Unit::TestCase
     assert_operator SqlState.for('25008'), :<, SqlState.for('25000')
   end
 
-  def test_base_state_is_subclass_of_generic_state
-    assert_operator SqlState.for('25000'), :<, SqlState.for('00000')
+  def test_base_state_is_subclass_of_root
+    assert_operator SqlState.for('25000'), :<, SqlState
   end
 
 end
