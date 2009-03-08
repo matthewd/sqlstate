@@ -7,13 +7,14 @@ module SqlState::SqlStateClass
   end
   def define(suffix, description, parent=nil)
     parent ||= self
-    sql_state = (@sqlstate_prefix || '') + suffix
+    sql_state = (defined?(@sqlstate_prefix) ? @sqlstate_prefix : '') + suffix
     name = description.gsub(/([A-Za-z])([A-Za-z0-9]+)/) { $1.upcase + $2.downcase }.gsub(/[^A-Za-z0-9]+/, '')
     klass = Class.new(parent)
     klass.const_set :SQL_STATE, sql_state
     klass.const_set :MESSAGE, description
-    klass.instance_variable_set :@root, @root || self
-    (@root || self).const_set name, klass
+    root = defined?( @root ) ? @root : self
+    klass.instance_variable_set :@root, root
+    root.const_set name, klass
     sqlstate_subclasses[sql_state] = klass
   end
   def subclass_for(sql_state)
@@ -32,7 +33,11 @@ module SqlState::SqlStateRoot
     @parent_root = v
   end
   def parent_root
-    @parent_root || (self == SqlState ? nil : SqlState)
+    defined?(@parent_root) ?
+      @parent_root :
+      self == SqlState ?
+        nil :
+        SqlState
   end
 
   def class_for(state)
